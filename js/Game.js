@@ -15,7 +15,7 @@ class Game {
 */
     createPhrases(){
         let phrases = [new Phrase('Web Browser'), new Phrase('Internet of Things'), new Phrase('Virtual Reality'), 
-        new Phrase('Cryptocurrency Exchange'), new Phrase('Graphical Processing Unit')];
+        new Phrase('Crypto Exchange'), new Phrase('Graphical Processing Unit')];
         return phrases;
     }
 
@@ -34,6 +34,7 @@ class Game {
  * Begins game by selecting a random phrase and displaying it to user
  */
  startGame() {
+     this.resetGame();
      let startScreen = document.getElementById('overlay');
      startScreen.style.display = 'none';
      this.activePhrase = this.getRandomPhrase();
@@ -46,6 +47,7 @@ class Game {
 checkForWin() {
     let phrase = document.getElementById('phrase');
     let remainingLetters = phrase.querySelectorAll('.hide');
+
     return (remainingLetters.length === 0);
 };
 
@@ -58,7 +60,7 @@ checkForWin() {
      let heart = document.querySelector("img[src='images/liveHeart.png']");
      heart.src = "images/lostHeart.png";
      this.missed += 1;
-     if(this.missed >= 5){
+     if(this.missed === 5){
          this.gameOver(this.checkForWin());
      }
  }
@@ -70,9 +72,6 @@ checkForWin() {
 gameOver(gameWon) {
     let startScreen = document.querySelector('#overlay');
     let gameOverMessage = document.querySelector('#game-over-message');
-    let phraseElement = document.querySelector('#phrase').firstElementChild;
-    let buttonElements = document.querySelectorAll('.key');
-    let heartImages = document.querySelectorAll("img[src='images/lostHeart.png");
 
     startScreen.classList.remove('start', 'lose', 'win');
 
@@ -84,26 +83,29 @@ gameOver(gameWon) {
         gameOverMessage.innerHTML = 'Oops! Better luck next time.';
     }
     startScreen.style.display = '';
-    
-    //Resets the game in 3 steps:
+}
 
-    //Removes all the letters (li elements) from the phrase div
+/**
+ * Removes the old phrase from the DOM, resets virtual keyboard buttons, and refills all hearts/chances.
+ */
+resetGame(){
+    let phraseElement = document.querySelector('#phrase').firstElementChild;
+    let buttonElements = document.querySelectorAll('.key');
+    let heartImages = document.querySelectorAll("img[src='images/lostHeart.png");
+
     while (phraseElement.children.length > 0) {
          phraseElement.removeChild(phraseElement.firstElementChild);
     }
 
-    //resets the buttons back to their original state
     for (let i = 0; i < buttonElements.length; i++){
         buttonElements[i].disabled = false;
         buttonElements[i].classList.remove('chosen', 'wrong');
     }
 
-    //refills the hearts
     for (let i = 0; i < heartImages.length; i++){
         heartImages[i].src = 'images/liveHeart.png';
     }
-
-};
+}
 
 /**
  * Handles onscreen keyboard button clicks
@@ -117,8 +119,9 @@ handleInteraction(button){
     } else {
         button.classList.add('chosen');
         this.activePhrase.showMatchedLetter(button.textContent);
-        if(this.checkForWin()){
-            this.gameOver(true);
+        let gameWon = this.checkForWin();
+        if(gameWon){
+            this.gameOver(gameWon);
         };
     }
 }
