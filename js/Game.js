@@ -74,12 +74,12 @@ gameOver(gameWon) {
     let buttonElements = document.querySelectorAll('.key');
     let heartImages = document.querySelectorAll("img[src='images/lostHeart.png");
 
+    startScreen.classList.remove('start', 'lose', 'win');
+
     if(gameWon){
-        startScreen.classList.remove('start');
         startScreen.classList.add('win');
         gameOverMessage.innerHTML = 'Congratulations! You won the game.';
     } else {
-        startScreen.classList.remove('start');
         startScreen.classList.add('lose');
         gameOverMessage.innerHTML = 'Oops! Better luck next time.';
     }
@@ -95,15 +95,13 @@ gameOver(gameWon) {
     //resets the buttons back to their original state
     for (let i = 0; i < buttonElements.length; i++){
         buttonElements[i].disabled = false;
-        buttonElements[i].classList = ('key');
+        buttonElements[i].classList.remove('chosen', 'wrong');
     }
 
     //refills the hearts
     for (let i = 0; i < heartImages.length; i++){
         heartImages[i].src = 'images/liveHeart.png';
     }
-
-    //this.missed = 0;
 
 };
 

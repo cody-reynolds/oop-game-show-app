@@ -14,14 +14,12 @@ startButton.addEventListener('click', (e) => {
 let keyboardButtons = document.getElementById('qwerty');
 
 keyboardButtons.addEventListener('click', (event) => {
-    if(event.target.className === 'key') {
+    if(event.target.classList.contains('key') && event.target.tagName === 'BUTTON') {
         game.handleInteraction(event.target);
     }
 });
 
-
-// document.addEventListener('keyup', (event) => {
-//         let pressedButton = document.querySelector(`.js-${event.key}`);
-//         game.handleInteraction(pressedButton);
-//         console.log(event.key);
-// });
+document.addEventListener('keyup', (event) => {
+    let pressedButton = document.querySelector(`.js-${event.key}`);
+    game.handleInteraction(pressedButton);
+});
